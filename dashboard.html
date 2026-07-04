@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGV - Panel de Control</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+
+    <!-- Barra de Navegación Superior -->
+    <nav class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-xs">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">SGV Ganadería</h2>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="text-right">
+                <p id="user-display" class="text-sm font-semibold text-slate-700">Usuario</p>
+                <p id="roles-display" class="text-xs text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded-full inline-block mt-0.5">Roles</p>
+            </div>
+            <button id="btn-logout" class="bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium px-4 py-2 rounded-lg text-xs transition-all cursor-pointer">
+                Cerrar Sesión
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
+        
+        <!-- Mensaje de Bienvenida -->
+        <div class="bg-gradient-to-r from-slate-800 to-slate-950 p-6 rounded-2xl text-white shadow-md">
+            <h1 class="text-2xl font-bold">¡Bienvenido al Panel de Control!</h1>
+            <p class="text-slate-300 text-sm mt-1">Desde aquí puedes gestionar la información ganadera según tus permisos asignados.</p>
+        </div>
+
+        <!-- SECCIÓN DINÁMICA DE ACCIONES (Controlada por Roles) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Tarjeta 1: Ver Animales (Disponible para LECTOR, DIGITADOR, EDITOR, ADMINISTRADOR) -->
+            <div id="card-lectura" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                <span class="p-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold inline-block">Módulo Lectura</span>
+                <h3 class="font-bold text-slate-800 text-lg">Catálogo de Animales</h3>
+                <p class="text-slate-500 text-xs leading-relaxed">Visualiza el historial completo del ganado, genealogía, pesajes y estados de salud.</p>
+                <button class="w-full bg-slate-800 hover:bg-slate-900 text-white text-xs py-2.5 rounded-lg font-medium cursor-pointer transition-all">Ver Listado</button>
+            </div>
+
+            <!-- Tarjeta 2: Ingresar Datos (Solo DIGITADOR o ADMINISTRADOR) -->
+            <div id="card-registro" class="hidden bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg text-sm font-bold inline-block">Módulo Escritura</span>
+                <h3 class="font-bold text-slate-800 text-lg">Registrar Eventos</h3>
+                <p class="text-slate-500 text-xs leading-relaxed">Añade nuevos animales al sistema, reporta producciones de leche, partos o tratamientos aplicados.</p>
+                <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2.5 rounded-lg font-medium cursor-pointer transition-all">Nuevo Registro</button>
+            </div>
+
+            <!-- Tarjeta 3: Modificar Datos (Solo EDITOR o ADMINISTRADOR) -->
+            <div id="card-edicion" class="hidden bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                <span class="p-2 bg-amber-50 text-amber-600 rounded-lg text-sm font-bold inline-block">Módulo Edición</span>
+                <h3 class="font-bold text-slate-800 text-lg">Modificar Información</h3>
+                <p class="text-slate-500 text-xs leading-relaxed">Corrige registros existentes, edita ubicaciones de los animales o actualiza fichas médicas.</p>
+                <button class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs py-2.5 rounded-lg font-medium cursor-pointer transition-all">Editar Registros</button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // 1. SEGURIDAD: Verificar de inmediato si el usuario está autenticado
+        const token = localStorage.getItem('sgv_token');
+        const userJson = localStorage.getItem('sgv_user');
+
+        if (!token || !userJson) {
+            // Si no hay datos, expulsar inmediatamente al Login
+            window.location.href = 'index.html';
+        }
+
+        const usuario = JSON.parse(userJson);
+
+        // 2. Pintar los datos del usuario en la interfaz
+        document.getElementById('user-display').innerText = `@${usuario.username}`;
+        document.getElementById('roles-display').innerText = usuario.roles.join(' + ');
+
+        // 3. CONTROL DE ACCESOS GRANULAR EN EL FRONTEND
+        // Revisamos qué roles tiene la lista que nos dio el Token
+        const roles = usuario.roles;
+
+        // Mostrar módulo de registro si es DIGITADOR o ADMINISTRADOR
+        if (roles.includes('DIGITADOR') || roles.includes('ADMINISTRADOR')) {
+            document.getElementById('card-registro').classList.remove('hidden');
+        }
+
+        // Mostrar módulo de edición si es EDITOR o ADMINISTRADOR
+        if (roles.includes('EDITOR') || roles.includes('ADMINISTRADOR')) {
+            document.getElementById('card-edicion').classList.remove('hidden');
+        }
+
+        // 4. Lógica del Botón Cerrar Sesión
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            localStorage.clear(); // Limpia los tokens guardados
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
