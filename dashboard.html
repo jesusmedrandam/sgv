@@ -3,100 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGV - Panel de Control</title>
+    <title>SGV - Panel de Gestión Ganadera</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col">
+<body class="bg-slate-50 min-h-screen flex flex-col font-sans">
 
-    <!-- Barra de Navegación Superior -->
-    <nav class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-xs">
-        <div>
-            <h2 class="text-xl font-bold text-slate-800">SGV Ganadería</h2>
+    <!-- BARRA SUPERIOR -->
+    <nav class="bg-white border-b border-slate-200 px-6 py-3.5 flex justify-between items-center shadow-xs sticky top-0 z-40">
+        <div class="flex items-center space-x-3">
+            <div class="bg-emerald-600 text-white p-2 rounded-xl font-bold text-sm tracking-wider">SGV</div>
+            <h2 class="text-lg font-bold text-slate-800">Sistema Ganadero</h2>
         </div>
         <div class="flex items-center space-x-4">
-            <div class="text-right">
-                <p id="user-display" class="text-sm font-semibold text-slate-700">Usuario</p>
-                <p id="roles-display" class="text-xs text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded-full inline-block mt-0.5">Roles</p>
-            </div>
-            <button id="btn-logout" class="bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-600 font-medium px-4 py-2 rounded-lg text-xs transition-all cursor-pointer">
-                Cerrar Sesión
+            <!-- Botón Perfil -->
+            <button id="btn-perfil" class="text-right focus:outline-none hover:bg-slate-50 p-1.5 rounded-lg transition-all cursor-pointer flex items-center space-x-2">
+                <div class="text-right">
+                    <p id="user-display" class="text-sm font-bold text-slate-700">@usuario</p>
+                    <p id="roles-display" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md mt-0.5">Rol</p>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs uppercase" id="avatar-letra">U</div>
+            </button>
+            <button id="btn-logout" class="bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-600 font-semibold px-3 py-2 rounded-lg text-xs transition-all cursor-pointer">
+                Salir
             </button>
         </div>
     </nav>
 
-    <!-- Contenido Principal -->
-    <main class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
+    <!-- MENÚ DE PESTAÑAS (TABS) -->
+    <div class="bg-white border-b border-slate-200 px-6 shadow-xs">
+        <div class="flex space-x-6 max-w-7xl mx-auto" id="tabs-container">
+            <button onclick="switchTab('tab-resumen')" id="btn-tab-resumen" class="tab-btn py-3 text-sm font-semibold border-b-2 border-emerald-600 text-emerald-600 cursor-pointer">
+                Inicio / Resumen
+            </button>
+            <button onclick="switchTab('tab-ganado')" id="btn-tab-ganado" class="tab-btn py-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">
+                Control de Ganado
+            </button>
+            <button onclick="switchTab('tab-eventos')" id="btn-tab-eventos" class="tab-btn py-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">
+                Producción y Eventos
+            </button>
+            <!-- Pestaña oculta por defecto, se activa solo para ADMIN -->
+            <button onclick="switchTab('tab-usuarios')" id="btn-tab-usuarios" class="hidden tab-btn py-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">
+                Administrar Usuarios
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENIDO GENERAL -->
+    <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
         
-        <!-- Mensaje de Bienvenida -->
-        <div class="bg-gradient-to-r from-slate-800 to-slate-950 p-6 rounded-2xl text-white shadow-md">
-            <h1 class="text-2xl font-bold">¡Bienvenido al Panel de Control!</h1>
-            <p class="text-slate-300 text-sm mt-1">Desde aquí puedes gestionar la información ganadera según tus permisos asignados.</p>
-        </div>
-
-        <!-- SECCIÓN DINÁMICA DE ACCIONES (Controlada por Roles) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- Tarjeta 1: Ver Animales (Disponible para LECTOR, DIGITADOR, EDITOR, ADMINISTRADOR) -->
-            <div id="card-lectura" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-                <span class="p-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold inline-block">Módulo Lectura</span>
-                <h3 class="font-bold text-slate-800 text-lg">Catálogo de Animales</h3>
-                <p class="text-slate-500 text-xs leading-relaxed">Visualiza el historial completo del ganado, genealogía, pesajes y estados de salud.</p>
-                <button class="w-full bg-slate-800 hover:bg-slate-900 text-white text-xs py-2.5 rounded-lg font-medium cursor-pointer transition-all">Ver Listado</button>
+        <!-- PESTAÑA 1: RESUMEN (BONITO) -->
+        <section id="tab-resumen" class="tab-content space-y-6">
+            <div class="bg-gradient-to-r from-slate-800 to-emerald-950 p-6 rounded-2xl text-white shadow-xs">
+                <h1 class="text-2xl font-bold">Resumen General de la Hacienda</h1>
+                <p class="text-emerald-200 text-xs mt-1">Estado de la infraestructura ganadera en tiempo real.</p>
             </div>
 
-            <!-- Tarjeta 2: Ingresar Datos (Solo DIGITADOR o ADMINISTRADOR) -->
-            <div id="card-registro" class="hidden bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-                <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg text-sm font-bold inline-block">Módulo Escritura</span>
-                <h3 class="font-bold text-slate-800 text-lg">Registrar Eventos</h3>
-                <p class="text-slate-500 text-xs leading-relaxed">Añade nuevos animales al sistema, reporta producciones de leche, partos o tratamientos aplicados.</p>
-                <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2.5 rounded-lg font-medium cursor-pointer transition-all">Nuevo Registro</button>
+            <!-- TARJETAS INDICADORES (KPIs) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Total Cabezas</p>
+                    <p class="text-3xl font-black text-slate-800 mt-1">148</p>
+                    <span class="text-xs text-emerald-600 font-medium mt-1 inline-block">✓ Activos en potrero</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Vacas en Ordeño</p>
+                    <p class="text-3xl font-black text-slate-800 mt-1">52</p>
+                    <span class="text-xs text-blue-600 font-medium mt-1 inline-block">🥛 Producción activa</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Producción Diaria</p>
+                    <p class="text-3xl font-black text-slate-800 mt-1">684 <span class="text-lg font-normal text-slate-500">Ltrs</span></p>
+                    <span class="text-xs text-slate-500 font-medium mt-1 inline-block">Promedio: 13.1L / vaca</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Tratamientos Médicos</p>
+                    <p class="text-3xl font-black text-amber-600 mt-1">4</p>
+                    <span class="text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-sm font-semibold mt-1 inline-block">Bajo observación</span>
+                </div>
             </div>
+        </section>
 
-            <!-- Tarjeta 3: Modificar Datos (Solo EDITOR o ADMINISTRADOR) -->
-            <div id="card-edicion" class="hidden bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-                <span class="p-2 bg-amber-50 text-amber-600 rounded-lg text-sm font-bold inline-block">Módulo Edición</span>
-                <h3 class="font-bold text-slate-800 text-lg">Modificar Información</h3>
-                <p class="text-slate-500 text-xs leading-relaxed">Corrige registros existentes, edita ubicaciones de los animales o actualiza fichas médicas.</p>
-                <button class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs py-2.5 rounded-lg font-medium cursor-pointer transition-all">Editar Registros</button>
+        <!-- PESTAÑA 2: GANADO -->
+        <section id="tab-ganado" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Inventario Físico de Bovinos</h3>
+                <p class="text-sm text-slate-500">Aquí se desplegará la tabla interactiva de animales con sus respectivas razas, pesos y filiaciones.</p>
+                <div class="mt-4 p-4 bg-slate-50 border border-dashed border-slate-300 rounded-lg text-center text-xs text-slate-400">Módulo en construcción (Próxima etapa)</div>
             </div>
+        </section>
 
-        </div>
+        <!-- PESTAÑA 3: EVENTOS -->
+        <section id="tab-eventos" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Bitácora de Eventos Colectivos</h3>
+                <p class="text-sm text-slate-500">Registro histórico de pesajes de leche diarios, inseminaciones, partos y reportes de decesos.</p>
+                <div class="mt-4 p-4 bg-slate-50 border border-dashed border-slate-300 rounded-lg text-center text-xs text-slate-400">Módulo en construcción (Próxima etapa)</div>
+            </div>
+        </section>
 
+        <!-- PESTAÑA 4: GESTIÓN DE USUARIOS (SOLO ADMIN) -->
+        <section id="tab-usuarios" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <h3 class="text-lg font-bold text-slate-800">Panel de Control de Usuarios</h3>
+                    <p class="text-xs text-slate-500">Como administrador, puedes registrar personal de campo y asignarles roles específicos en la base de datos.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Formulario Nuevo Usuario -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4 h-fit">
+                        <h4 class="font-bold text-slate-700 text-sm">Registrar Nuevo Colaborador</h4>
+                        
+                        <div id="user-alert" class="hidden text-xs px-3 py-2 rounded-lg"></div>
+
+                        <form id="form-crear-usuario" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de Usuario</label>
+                                <input type="text" id="new-username" required class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña Inicial</label>
+                                <input type="password" id="new-password" required class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Asignar Rol Principal</label>
+                                <select id="new-role" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                    <option value="1">ADMINISTRADOR (Acceso Total)</option>
+                                    <option value="2" selected>DIGITADOR (Ingreso de Datos)</option>
+                                    <option value="3">EDITOR (Modificación y Ajustes)</option>
+                                    <option value="4">LECTOR (Solo Visualizar)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-lg cursor-pointer transition-all">
+                                Guardar Usuario en Render
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Tabla de Usuarios (Simulada / Informativa) -->
+                    <div class="lg:col-span-2 space-y-3">
+                        <h4 class="font-bold text-slate-700 text-sm">Usuarios con Acceso Autorizado</h4>
+                        <div class="overflow-hidden border border-slate-200 rounded-xl bg-white shadow-xs">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">Usuario</th>
+                                        <th class="p-3">Roles</th>
+                                        <th class="p-3">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-slate-700">
+                                    <tr>
+                                        <td class="p-3 font-semibold text-slate-900">admin_ganaderia</td>
+                                        <td class="p-3"><span class="bg-red-50 text-red-600 font-bold px-2 py-0.5 rounded text-[10px]">ADMINISTRADOR</span></td>
+                                        <td class="p-3"><span class="text-emerald-600 font-bold">● Activo</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
+    <!-- MODAL: MI PERFIL (MODIFICAR DATOS) -->
+    <div id="modal-perfil" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            <div class="bg-slate-900 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-sm">Configuración de mi Perfil</h3>
+                <button onclick="cerrarPerfil()" class="text-slate-400 hover:text-white cursor-pointer font-bold text-sm">✕</button>
+            </div>
+            <form id="form-perfil" class="p-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Correo Electrónico</label>
+                    <input type="email" id="perfil-correo" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="ejemplo@correo.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono de Contacto</label>
+                    <input type="text" id="perfil-telefono" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="ej: +593 999999999">
+                </div>
+                <div class="border-t border-slate-100 pt-3">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Cambiar Contraseña (Opcional)</label>
+                    <input type="password" id="perfil-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="Dejar en blanco si no deseas cambiarla">
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="cerrarPerfil()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-200 cursor-pointer">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-700 cursor-pointer">Actualizar Datos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CÓDIGO DE CONTROL INTERACTIVO JS -->
     <script>
-        // 1. SEGURIDAD: Verificar de inmediato si el usuario está autenticado
+        // SEGURIDAD INICIAL
         const token = localStorage.getItem('sgv_token');
         const userJson = localStorage.getItem('sgv_user');
 
         if (!token || !userJson) {
-            // Si no hay datos, expulsar inmediatamente al Login
             window.location.href = 'index.html';
         }
 
         const usuario = JSON.parse(userJson);
 
-        // 2. Pintar los datos del usuario en la interfaz
+        // Renderizar datos del header
         document.getElementById('user-display').innerText = `@${usuario.username}`;
         document.getElementById('roles-display').innerText = usuario.roles.join(' + ');
+        document.getElementById('avatar-letra').innerText = usuario.username.charAt(0);
 
-        // 3. CONTROL DE ACCESOS GRANULAR EN EL FRONTEND
-        // Revisamos qué roles tiene la lista que nos dio el Token
-        const roles = usuario.roles;
-
-        // Mostrar módulo de registro si es DIGITADOR o ADMINISTRADOR
-        if (roles.includes('DIGITADOR') || roles.includes('ADMINISTRADOR')) {
-            document.getElementById('card-registro').classList.remove('hidden');
+        // Habilitar pestañas exclusivas si es ADMINISTRADOR
+        if (usuario.roles.includes('ADMINISTRADOR')) {
+            document.getElementById('btn-tab-usuarios').classList.remove('hidden');
         }
 
-        // Mostrar módulo de edición si es EDITOR o ADMINISTRADOR
-        if (roles.includes('EDITOR') || roles.includes('ADMINISTRADOR')) {
-            document.getElementById('card-edicion').classList.remove('hidden');
+        // CONTROLADOR DE PESTAÑAS (TABS)
+        function switchTab(tabId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.tab-content').forEach(section => section.classList.add('hidden'));
+            // Mostrar la seleccionada
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Actualizar estados visuales de los botones
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-emerald-600', 'text-emerald-600');
+                btn.classList.add('border-transparent', 'text-slate-500');
+            });
+            document.getElementById(`btn-${tabId}`).classList.add('border-emerald-600', 'text-emerald-600');
+            document.getElementById(`btn-${tabId}`).classList.remove('border-transparent', 'text-slate-500');
         }
 
-        // 4. Lógica del Botón Cerrar Sesión
+        // MODAL PERFIL
+        document.getElementById('btn-perfil').addEventListener('click', () => {
+            // Cargar datos guardados previamente si existen localmente
+            document.getElementById('perfil-correo').value = localStorage.getItem('sgv_correo') || '';
+            document.getElementById('perfil-telefono').value = localStorage.getItem('sgv_telefono') || '';
+            document.getElementById('modal-perfil').classList.remove('hidden');
+        });
+
+        function cerrarPerfil() {
+            document.getElementById('modal-perfil').classList.add('hidden');
+            document.getElementById('perfil-password').value = '';
+        }
+
+        document.getElementById('form-perfil').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Guardado temporal simulado (en fases posteriores se creará la ruta PUT /api/usuarios/perfil)
+            localStorage.setItem('sgv_correo', document.getElementById('perfil-correo').value);
+            localStorage.setItem('sgv_telefono', document.getElementById('perfil-telefono').value);
+            alert('¡Datos de perfil guardados en el navegador correctamente!');
+            cerrarPerfil();
+        });
+
+        // FORMULARIO: REGISTRAR USUARIOS (CONEXIÓN REAL AL BACKEND CON TOKEN)
+        document.getElementById('form-crear-usuario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const alertBox = document.getElementById('user-alert');
+            const usernameInput = document.getElementById('new-username').value.trim();
+            const passwordInput = document.getElementById('new-password').value;
+            const roleSelected = parseInt(document.getElementById('new-role').value);
+
+            alertBox.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/usuarios', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ 
+                        username: usernameInput, 
+                        password: passwordInput, 
+                        rolesIds: [roleSelected] 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error || 'Error al procesar el registro.');
+
+                alertBox.innerText = `✓ Éxito: ${data.mensaje}`;
+                alertBox.className = "text-xs px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 block mb-3";
+                document.getElementById('form-crear-usuario').reset();
+
+            } catch (err) {
+                alertBox.innerText = `✗ Error: ${err.message}`;
+                alertBox.className = "text-xs px-3 py-2 rounded-lg bg-red-50 text-red-700 block mb-3";
+            }
+        });
+
+        // LOGOUT
         document.getElementById('btn-logout').addEventListener('click', () => {
-            localStorage.clear(); // Limpia los tokens guardados
+            localStorage.clear();
             window.location.href = 'index.html';
         });
     </script>
