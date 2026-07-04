@@ -11,15 +11,14 @@
     <!-- BARRA SUPERIOR -->
     <nav class="bg-white border-b border-slate-200 px-6 py-3.5 flex justify-between items-center shadow-xs sticky top-0 z-40">
         <div class="flex items-center space-x-3">
-            <div class="bg-emerald-600 text-white p-2 rounded-xl font-bold text-sm tracking-wider">SGV</div>
+            <div class="bg-emerald-600 text-white p-2 rounded-xl font-bold text-sm tracking-wider shadow-xs">SGV</div>
             <h2 class="text-lg font-bold text-slate-800">Sistema Ganadero</h2>
         </div>
         <div class="flex items-center space-x-4">
-            <!-- Botón Perfil -->
             <button id="btn-perfil" class="text-right focus:outline-none hover:bg-slate-50 p-1.5 rounded-lg transition-all cursor-pointer flex items-center space-x-2">
                 <div class="text-right">
                     <p id="user-display" class="text-sm font-bold text-slate-700">@usuario</p>
-                    <p id="roles-display" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md mt-0.5">Rol</p>
+                    <p id="roles-display" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md mt-0.5 tracking-wide">Rol</p>
                 </div>
                 <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs uppercase" id="avatar-letra">U</div>
             </button>
@@ -32,132 +31,263 @@
     <!-- MENÚ DE PESTAÑAS (TABS) -->
     <div class="bg-white border-b border-slate-200 px-6 shadow-xs">
         <div class="flex space-x-6 max-w-7xl mx-auto" id="tabs-container">
-            <button onclick="switchTab('tab-resumen')" id="btn-tab-resumen" class="tab-btn py-3 text-sm font-semibold border-b-2 border-emerald-600 text-emerald-600 cursor-pointer">
-                Inicio / Resumen
-            </button>
-            <button onclick="switchTab('tab-ganado')" id="btn-tab-ganado" class="tab-btn py-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">
-                Control de Ganado
-            </button>
-            <button onclick="switchTab('tab-eventos')" id="btn-tab-eventos" class="tab-btn py-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">
-                Producción y Eventos
-            </button>
-            <!-- Pestaña oculta por defecto, se activa solo para ADMIN -->
-            <button onclick="switchTab('tab-usuarios')" id="btn-tab-usuarios" class="hidden tab-btn py-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">
-                Administrar Usuarios
-            </button>
+            <button onclick="switchTab('tab-resumen')" id="btn-tab-resumen" class="tab-btn py-3 text-sm font-bold border-b-2 border-emerald-600 text-emerald-600 cursor-pointer">Inicio / Resumen</button>
+            <button onclick="switchTab('tab-ganado')" id="btn-tab-ganado" class="tab-btn py-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">Inventario Ganado</button>
+            <button onclick="switchTab('tab-eventos')" id="btn-tab-eventos" class="tab-btn py-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">Registros y Producción</button>
+            <button onclick="switchTab('tab-usuarios')" id="btn-tab-usuarios" class="hidden tab-btn py-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer">Administrar Usuarios</button>
         </div>
     </div>
 
     <!-- CONTENIDO GENERAL -->
     <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
         
-        <!-- PESTAÑA 1: RESUMEN (BONITO) -->
+        <!-- PESTAÑA 1: RESUMEN INTERACTIVO -->
         <section id="tab-resumen" class="tab-content space-y-6">
             <div class="bg-gradient-to-r from-slate-800 to-emerald-950 p-6 rounded-2xl text-white shadow-xs">
                 <h1 class="text-2xl font-bold">Resumen General de la Hacienda</h1>
-                <p class="text-emerald-200 text-xs mt-1">Estado de la infraestructura ganadera en tiempo real.</p>
+                <p class="text-emerald-200 text-xs mt-1">Presiona cualquier tarjeta para ver el listado detallado al instante.</p>
             </div>
 
             <!-- TARJETAS INDICADORES (KPIs) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Total Cabezas</p>
-                    <p class="text-3xl font-black text-slate-800 mt-1">148</p>
-                    <span class="text-xs text-emerald-600 font-medium mt-1 inline-block">✓ Activos en potrero</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div onclick="switchTab('tab-ganado')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-all cursor-pointer group">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider group-hover:text-emerald-600">Total Cabezas</p>
+                    <p id="kpi-total" class="text-3xl font-black text-slate-800 mt-1">...</p>
+                    <span class="text-[11px] text-emerald-600 font-semibold mt-1 inline-block">→ Ver catálogo general</span>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Vacas en Ordeño</p>
-                    <p class="text-3xl font-black text-slate-800 mt-1">52</p>
-                    <span class="text-xs text-blue-600 font-medium mt-1 inline-block">🥛 Producción activa</span>
+                <div onclick="switchTab('tab-ganado')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-all cursor-pointer group">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider group-hover:text-blue-600">Vacas en Ordeño</p>
+                    <p id="kpi-ordeno" class="text-3xl font-black text-slate-800 mt-1">...</p>
+                    <span class="text-[11px] text-blue-600 font-semibold mt-1 inline-block">→ Ver hembras activas</span>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Producción Diaria</p>
-                    <p class="text-3xl font-black text-slate-800 mt-1">684 <span class="text-lg font-normal text-slate-500">Ltrs</span></p>
-                    <span class="text-xs text-slate-500 font-medium mt-1 inline-block">Promedio: 13.1L / vaca</span>
+                <div onclick="switchTab('tab-eventos')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-all cursor-pointer group">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider group-hover:text-purple-600">Producción Hoy</p>
+                    <p id="kpi-leche" class="text-3xl font-black text-slate-800 mt-1">... <span class="text-sm font-normal text-slate-400">Ltrs</span></p>
+                    <span class="text-[11px] text-purple-600 font-semibold mt-1 inline-block">→ Añadir pesajes</span>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Tratamientos Médicos</p>
-                    <p class="text-3xl font-black text-amber-600 mt-1">4</p>
-                    <span class="text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-sm font-semibold mt-1 inline-block">Bajo observación</span>
+                <div onclick="switchTab('tab-resumen')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Veterinaria (3d)</p>
+                    <p id="kpi-salud" class="text-3xl font-black text-amber-600 mt-1">...</p>
+                    <span class="text-[11px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded font-semibold mt-1 inline-block">Bajo tratamiento</span>
                 </div>
             </div>
         </section>
 
-        <!-- PESTAÑA 2: GANADO -->
-        <section id="tab-ganado" class="tab-content hidden space-y-4">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
-                <h3 class="text-lg font-bold text-slate-800 mb-2">Inventario Físico de Bovinos</h3>
-                <p class="text-sm text-slate-500">Aquí se desplegará la tabla interactiva de animales con sus respectivas razas, pesos y filiaciones.</p>
-                <div class="mt-4 p-4 bg-slate-50 border border-dashed border-slate-300 rounded-lg text-center text-xs text-slate-400">Módulo en construcción (Próxima etapa)</div>
+        <!-- PESTAÑA 2: INVENTARIO GANADO -->
+        <section id="tab-ganado" class="tab-content hidden space-y-6">
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                <div>
+                    <h3 class="text-md font-bold text-slate-800">Inventario Bovino</h3>
+                    <p class="text-xs text-slate-500">Listado sistemático de animales registrados en Render.</p>
+                </div>
+                <button onclick="document.getElementById('form-ganado-section').classList.toggle('hidden')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-lg cursor-pointer transition-all">
+                    + Nuevo Animal
+                </button>
+            </div>
+
+            <!-- FORMULARIO NUEVO ANIMAL (OCULTO POR DEFECTO) -->
+            <div id="form-ganado-section" class="hidden bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+                <h4 class="text-sm font-bold text-slate-700 border-b pb-2">Registrar Ficha de Bovino</h4>
+                <form id="form-nuevo-animal" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Nombre / Arete*</label>
+                        <input type="text" id="ani-nombre" required class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Sexo*</label>
+                        <select id="ani-sexo" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50">
+                            <option value="H">Hembra (H)</option>
+                            <option value="M">Macho (M)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Fecha Nacimiento</label>
+                        <input type="date" id="ani-fecha" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Ubicación / Potrero*</label>
+                        <select id="ani-ubicacion" required class="w-full border border-slate-300 rounded-lg p-2 bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Origen Ganado*</label>
+                        <select id="ani-origen" required class="w-full border border-slate-300 rounded-lg p-2 bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Raza Predominante</label>
+                        <select id="ani-raza" class="w-full border border-slate-300 rounded-lg p-2 bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Coloración</label>
+                        <select id="ani-color" class="w-full border border-slate-300 rounded-lg p-2 bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Propietario Asignado</label>
+                        <select id="ani-propietario" class="w-full border border-slate-300 rounded-lg p-2 bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Peso Inicial (Kg)</label>
+                        <input type="number" step="0.01" id="ani-peso" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Madre (Filiación)</label>
+                        <select id="ani-madre" class="w-full border border-slate-300 rounded-lg p-2 bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Padre (Filiación)</label>
+                        <select id="ani-padre" class="w-full border border-slate-300 rounded-lg p-2 bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">¿Entra a producción de Leche?</label>
+                        <select id="ani-ordeno" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50">
+                            <option value="false">No</option>
+                            <option value="true">Sí (Activa)</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block font-semibold text-slate-600 mb-1">Rasgos / Descripción</label>
+                        <input type="text" id="ani-desc" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50" placeholder="Marcas, procedencia particular...">
+                    </div>
+                    <div class="md:col-span-3 flex justify-end space-x-2">
+                        <button type="button" onclick="document.getElementById('form-ganado-section').classList.add('hidden')" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg font-semibold">Cancelar</button>
+                        <button type="submit" class="bg-emerald-600 text-white px-5 py-2 rounded-lg font-bold">Guardar en Base de Datos</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TABLA DE ANIMALES -->
+            <div class="bg-white overflow-hidden border border-slate-200 rounded-xl shadow-xs">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">ID</th>
+                                <th class="p-3">Nombre/Arete</th>
+                                <th class="p-3">Sexo</th>
+                                <th class="p-3">Ubicación</th>
+                                <th class="p-3">Origen</th>
+                                <th class="p-3">Peso</th>
+                                <th class="p-3">Ordeño</th>
+                                <th class="p-3">Madre/Padre</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-ganado-body" class="divide-y divide-slate-100 text-slate-700">
+                            <tr><td colspan="8" class="p-4 text-center text-slate-400">Cargando animales...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
-        <!-- PESTAÑA 3: EVENTOS -->
-        <section id="tab-eventos" class="tab-content hidden space-y-4">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
-                <h3 class="text-lg font-bold text-slate-800 mb-2">Bitácora de Eventos Colectivos</h3>
-                <p class="text-sm text-slate-500">Registro histórico de pesajes de leche diarios, inseminaciones, partos y reportes de decesos.</p>
-                <div class="mt-4 p-4 bg-slate-50 border border-dashed border-slate-300 rounded-lg text-center text-xs text-slate-400">Módulo en construcción (Próxima etapa)</div>
+        <!-- PESTAÑA 3: REGISTROS Y PRODUCCIÓN -->
+        <section id="tab-eventos" class="tab-content hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- FORMULARIO 1: REGISTRAR NACIMIENTO / PARTO -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+                <h3 class="text-sm font-bold text-slate-800 border-b pb-2">Reportar Nacimiento (Parto)</h3>
+                <form id="form-parto" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Seleccionar Madre*</label>
+                        <select id="parto-madre" required class="w-full border border-slate-300 rounded-lg p-2"></select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-semibold text-slate-600 mb-1">Fecha del Suceso*</label>
+                            <input type="date" id="parto-fecha" required class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 mb-1">Sexo de la Cría*</label>
+                            <select id="parto-sexo" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50">
+                                <option value="H">Hembra (H)</option>
+                                <option value="M">Macho (M)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Nombre / Identificador de la Cría</label>
+                        <input type="text" id="parto-nombre-cria" placeholder="Dejar vacío si no se registra arete aún" class="w-full border border-slate-300 rounded-lg p-2">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Observaciones Clínicas</label>
+                        <textarea id="parto-obs" rows="2" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50" placeholder="Estado de salud de la madre, complicaciones..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg cursor-pointer">Registrar Parto y Cría</button>
+                </form>
+            </div>
+
+            <!-- FORMULARIO 2: PESADA DE LECHE -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+                <h3 class="text-sm font-bold text-slate-800 border-b pb-2">Control Diario de Ordeño (Leche)</h3>
+                <form id="form-produccion" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Seleccionar Vaca*</label>
+                        <select id="prod-vaca" required class="w-full border border-slate-300 rounded-lg p-2"></select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-semibold text-slate-600 mb-1">Fecha*</label>
+                            <input type="date" id="prod-fecha" required class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 mb-1">Cantidad (Litros)*</label>
+                            <input type="number" step="0.01" id="prod-cantidad" required class="w-full border border-slate-300 rounded-lg p-2 bg-slate-50" placeholder="ej: 14.5">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded-lg cursor-pointer">Guardar Registro de Leche</button>
+                </form>
             </div>
         </section>
 
-        <!-- PESTAÑA 4: GESTIÓN DE USUARIOS (SOLO ADMIN) -->
+        <!-- PESTAÑA 4: GESTIÓN DE USUARIOS REAL -->
         <section id="tab-usuarios" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
                 <div class="border-b border-slate-200 pb-4 mb-6">
                     <h3 class="text-lg font-bold text-slate-800">Panel de Control de Usuarios</h3>
-                    <p class="text-xs text-slate-500">Como administrador, puedes registrar personal de campo y asignarles roles específicos en la base de datos.</p>
+                    <p class="text-xs text-slate-500">Listado e ingreso de las cuentas asignadas al sistema de ganadería.</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Formulario Nuevo Usuario -->
                     <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4 h-fit">
                         <h4 class="font-bold text-slate-700 text-sm">Registrar Nuevo Colaborador</h4>
-                        
                         <div id="user-alert" class="hidden text-xs px-3 py-2 rounded-lg"></div>
 
-                        <form id="form-crear-usuario" class="space-y-4">
+                        <form id="form-crear-usuario" class="space-y-4 text-xs">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de Usuario</label>
-                                <input type="text" id="new-username" required class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                <label class="block font-semibold text-slate-600 mb-1">Nombre de Usuario</label>
+                                <input type="text" id="new-username" required class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:ring-1 focus:ring-emerald-500">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña Inicial</label>
-                                <input type="password" id="new-password" required class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                <label class="block font-semibold text-slate-600 mb-1">Contraseña Inicial</label>
+                                <input type="password" id="new-password" required class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:ring-1 focus:ring-emerald-500">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Asignar Rol Principal</label>
-                                <select id="new-role" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                                    <option value="1">ADMINISTRADOR (Acceso Total)</option>
-                                    <option value="2" selected>DIGITADOR (Ingreso de Datos)</option>
-                                    <option value="3">EDITOR (Modificación y Ajustes)</option>
-                                    <option value="4">LECTOR (Solo Visualizar)</option>
+                                <label class="block font-semibold text-slate-600 mb-1">Asignar Rol Principal</label>
+                                <select id="new-role" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:ring-1 focus:ring-emerald-500">
+                                    <option value="1">ADMINISTRADOR</option>
+                                    <option value="2" selected>DIGITADOR</option>
+                                    <option value="3">EDITOR</option>
+                                    <option value="4">LECTOR</option>
                                 </select>
                             </div>
-                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-lg cursor-pointer transition-all">
-                                Guardar Usuario en Render
-                            </button>
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg cursor-pointer transition-all">Guardar en Base de Datos</button>
                         </form>
                     </div>
 
-                    <!-- Tabla de Usuarios (Simulada / Informativa) -->
+                    <!-- Tabla de Usuarios Real -->
                     <div class="lg:col-span-2 space-y-3">
-                        <h4 class="font-bold text-slate-700 text-sm">Usuarios con Acceso Autorizado</h4>
+                        <h4 class="font-bold text-slate-700 text-sm">Cuentas Autorizadas en PostgreSQL</h4>
                         <div class="overflow-hidden border border-slate-200 rounded-xl bg-white shadow-xs">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
                                     <tr>
+                                        <th class="p-3">ID</th>
                                         <th class="p-3">Usuario</th>
-                                        <th class="p-3">Roles</th>
+                                        <th class="p-3">Roles Asignados</th>
                                         <th class="p-3">Estado</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-100 text-slate-700">
-                                    <tr>
-                                        <td class="p-3 font-semibold text-slate-900">admin_ganaderia</td>
-                                        <td class="p-3"><span class="bg-red-50 text-red-600 font-bold px-2 py-0.5 rounded text-[10px]">ADMINISTRADOR</span></td>
-                                        <td class="p-3"><span class="text-emerald-600 font-bold">● Activo</span></td>
-                                    </tr>
+                                <tbody id="tabla-usuarios-body" class="divide-y divide-slate-100 text-slate-700">
+                                    <tr><td colspan="4" class="p-4 text-center text-slate-400">Cargando base de usuarios...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -167,137 +297,244 @@
         </section>
     </main>
 
-    <!-- MODAL: MI PERFIL (MODIFICAR DATOS) -->
-    <div id="modal-perfil" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-            <div class="bg-slate-900 p-4 text-white flex justify-between items-center">
-                <h3 class="font-bold text-sm">Configuración de mi Perfil</h3>
-                <button onclick="cerrarPerfil()" class="text-slate-400 hover:text-white cursor-pointer font-bold text-sm">✕</button>
-            </div>
-            <form id="form-perfil" class="p-5 space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Correo Electrónico</label>
-                    <input type="email" id="perfil-correo" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="ejemplo@correo.com">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono de Contacto</label>
-                    <input type="text" id="perfil-telefono" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="ej: +593 999999999">
-                </div>
-                <div class="border-t border-slate-100 pt-3">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Cambiar Contraseña (Opcional)</label>
-                    <input type="password" id="perfil-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 focus:ring-1 focus:ring-emerald-500 focus:outline-none" placeholder="Dejar en blanco si no deseas cambiarla">
-                </div>
-                <div class="flex justify-end space-x-2 pt-2">
-                    <button type="button" onclick="cerrarPerfil()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-200 cursor-pointer">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-700 cursor-pointer">Actualizar Datos</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- CÓDIGO DE CONTROL INTERACTIVO JS -->
+    <!-- CONTROLADOR INTERACTIVO JS -->
     <script>
-        // SEGURIDAD INICIAL
         const token = localStorage.getItem('sgv_token');
         const userJson = localStorage.getItem('sgv_user');
 
-        if (!token || !userJson) {
-            window.location.href = 'index.html';
-        }
+        if (!token || !userJson) window.location.href = 'index.html';
 
         const usuario = JSON.parse(userJson);
+        let catalogosGlobales = {};
 
-        // Renderizar datos del header
         document.getElementById('user-display').innerText = `@${usuario.username}`;
         document.getElementById('roles-display').innerText = usuario.roles.join(' + ');
         document.getElementById('avatar-letra').innerText = usuario.username.charAt(0);
 
-        // Habilitar pestañas exclusivas si es ADMINISTRADOR
         if (usuario.roles.includes('ADMINISTRADOR')) {
             document.getElementById('btn-tab-usuarios').classList.remove('hidden');
         }
 
-        // CONTROLADOR DE PESTAÑAS (TABS)
         function switchTab(tabId) {
-            // Ocultar todas las secciones
             document.querySelectorAll('.tab-content').forEach(section => section.classList.add('hidden'));
-            // Mostrar la seleccionada
             document.getElementById(tabId).classList.remove('hidden');
 
-            // Actualizar estados visuales de los botones
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('border-emerald-600', 'text-emerald-600');
                 btn.classList.add('border-transparent', 'text-slate-500');
             });
             document.getElementById(`btn-${tabId}`).classList.add('border-emerald-600', 'text-emerald-600');
             document.getElementById(`btn-${tabId}`).classList.remove('border-transparent', 'text-slate-500');
+
+            if (tabId === 'tab-ganado') cargarAnimales();
+            if (tabId === 'tab-usuarios') cargarUsuarios();
         }
 
-        // MODAL PERFIL
-        document.getElementById('btn-perfil').addEventListener('click', () => {
-            // Cargar datos guardados previamente si existen localmente
-            document.getElementById('perfil-correo').value = localStorage.getItem('sgv_correo') || '';
-            document.getElementById('perfil-telefono').value = localStorage.getItem('sgv_telefono') || '';
-            document.getElementById('modal-perfil').classList.remove('hidden');
-        });
-
-        function cerrarPerfil() {
-            document.getElementById('modal-perfil').classList.add('hidden');
-            document.getElementById('perfil-password').value = '';
-        }
-
-        document.getElementById('form-perfil').addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Guardado temporal simulado (en fases posteriores se creará la ruta PUT /api/usuarios/perfil)
-            localStorage.setItem('sgv_correo', document.getElementById('perfil-correo').value);
-            localStorage.setItem('sgv_telefono', document.getElementById('perfil-telefono').value);
-            alert('¡Datos de perfil guardados en el navegador correctamente!');
-            cerrarPerfil();
-        });
-
-        // FORMULARIO: REGISTRAR USUARIOS (CONEXIÓN REAL AL BACKEND CON TOKEN)
-        document.getElementById('form-crear-usuario').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const alertBox = document.getElementById('user-alert');
-            const usernameInput = document.getElementById('new-username').value.trim();
-            const passwordInput = document.getElementById('new-password').value;
-            const roleSelected = parseInt(document.getElementById('new-role').value);
-
-            alertBox.classList.add('hidden');
-
+        // CARGAR DATOS GENERALES (KPIs y Catálogos)
+        async function inicializarDashboard() {
             try {
-                const response = await fetch('/api/usuarios', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ 
-                        username: usernameInput, 
-                        password: passwordInput, 
-                        rolesIds: [roleSelected] 
-                    })
+                const res = await fetch('/api/ganado/resumen', {
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
+                const data = await res.json();
+                
+                // Pintar KPIs
+                document.getElementById('kpi-total').innerText = data.kpis.total_cabezas;
+                document.getElementById('kpi-ordeno').innerText = data.kpis.vacas_ordeno;
+                document.getElementById('kpi-leche').innerText = data.kpis.produccion_diaria;
+                document.getElementById('kpi-salud').innerText = data.kpis.tratamientos_activos;
 
-                const data = await response.json();
-
-                if (!response.ok) throw new Error(data.error || 'Error al procesar el registro.');
-
-                alertBox.innerText = `✓ Éxito: ${data.mensaje}`;
-                alertBox.className = "text-xs px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 block mb-3";
-                document.getElementById('form-crear-usuario').reset();
-
+                catalogosGlobales = data.catalogos;
+                poblarSelects();
             } catch (err) {
-                alertBox.innerText = `✗ Error: ${err.message}`;
-                alertBox.className = "text-xs px-3 py-2 rounded-lg bg-red-50 text-red-700 block mb-3";
+                console.error("Error al cargar la información del dashboard.");
+            }
+        }
+
+        function poblarSelects() {
+            const llenar = (id, lista, idField, nameField = 'nombre') => {
+                const select = document.getElementById(id);
+                if (!select) return;
+                select.innerHTML = '<option value="">-- Seleccionar --</option>';
+                lista.forEach(item => {
+                    select.innerHTML += `<option value="${item[idField]}">${item[nameField]}</option>`;
+                });
+            };
+
+            llenar('ani-ubicacion', catalogosGlobales.ubicaciones, 'id_ubicacion');
+            llenar('ani-origen', catalogosGlobales.origenes, 'id_origen');
+            llenar('ani-raza', catalogosGlobales.razas, 'id_raza');
+            llenar('ani-color', catalogosGlobales.colores, 'id_color');
+            llenar('ani-propietario', catalogosGlobales.propietarios, 'id_propietario');
+            llenar('ani-madre', catalogosGlobales.madres, 'id_animal');
+            llenar('ani-padre', catalogosGlobales.padres, 'id_animal');
+            
+            llenar('parto-madre', catalogosGlobales.madres, 'id_animal');
+            llenar('prod-vaca', catalogosGlobales.madres, 'id_animal');
+        }
+
+        // CARGAR LISTA DE ANIMALES REALES
+        async function cargarAnimales() {
+            try {
+                const res = await fetch('/api/ganado/animales', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const lista = await res.json();
+                const tbody = document.getElementById('tabla-ganado-body');
+                tbody.innerHTML = '';
+
+                if (lista.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-slate-400">No hay animales registrados.</td></tr>';
+                    return;
+                }
+
+                lista.forEach(a => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition-all">
+                            <td class="p-3 font-semibold text-slate-500">${a.id_animal}</td>
+                            <td class="p-3 font-bold text-slate-900">${a.nombre}</td>
+                            <td class="p-3"><span class="px-1.5 py-0.5 rounded ${a.sexo === 'H' ? 'bg-pink-50 text-pink-600':'bg-blue-50 text-blue-600'} font-bold">${a.sexo}</span></td>
+                            <td class="p-3 text-slate-600">${a.ubicacion}</td>
+                            <td class="p-3 text-slate-500">${a.origen}</td>
+                            <td class="p-3 font-medium text-slate-800">${a.peso || 0} Kg</td>
+                            <td class="p-3">${a.ordeno ? '🥛 Sí':'No'}</td>
+                            <td class="p-3 text-slate-500 font-medium">M: ${a.madre || '-'}<br>P: ${a.padre || '-'}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al recopilar el catálogo bovino.");
+            }
+        }
+
+        // CARGAR BASE DE USUARIOS
+        async function cargarUsuarios() {
+            try {
+                const res = await fetch('/api/usuarios', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const lista = await res.json();
+                const tbody = document.getElementById('tabla-usuarios-body');
+                tbody.innerHTML = '';
+
+                lista.forEach(u => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="p-3 text-slate-400 font-bold">${u.id_usuario}</td>
+                            <td class="p-3 font-bold text-slate-800">@${u.username}</td>
+                            <td class="p-3"><span class="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded text-[10px] border border-slate-200">${u.roles.join(', ')}</span></td>
+                            <td class="p-3"><span class="${u.activo ? 'text-emerald-600':'text-red-500'} font-bold">● ${u.activo ? 'Activo':'Suspendido'}</span></td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error al leer la base de usuarios.");
+            }
+        }
+
+        // GUARDAR NUEVO ANIMAL
+        document.getElementById('form-nuevo-animal').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = {
+                nombre: document.getElementById('ani-nombre').value.trim(),
+                sexo: document.getElementById('ani-sexo').value,
+                fecha_nacimiento: document.getElementById('ani-fecha').value,
+                id_ubicacion: parseInt(document.getElementById('ani-ubicacion').value),
+                id_origen: parseInt(document.getElementById('ani-origen').value),
+                id_raza: parseInt(document.getElementById('ani-raza').value) || null,
+                id_color: parseInt(document.getElementById('ani-color').value) || null,
+                id_propietario: parseInt(document.getElementById('ani-propietario').value) || null,
+                peso: parseFloat(document.getElementById('ani-peso').value) || 0,
+                id_madre: parseInt(document.getElementById('ani-madre').value) || null,
+                id_padre: parseInt(document.getElementById('ani-padre').value) || null,
+                ordeno: document.getElementById('ani-ordeno').value === 'true',
+                descripcion: document.getElementById('ani-desc').value.trim()
+            };
+
+            const res = await fetch('/api/ganado/animales', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(body)
+            });
+            if (res.ok) {
+                alert('¡Bovino guardado correctamente!');
+                document.getElementById('form-nuevo-animal').reset();
+                document.getElementById('form-ganado-section').classList.add('hidden');
+                inicializarDashboard();
+                cargarAnimales();
             }
         });
 
-        // LOGOUT
+        // GUARDAR NACIMIENTO
+        document.getElementById('form-parto').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = {
+                id_madre: parseInt(document.getElementById('parto-madre').value),
+                fecha: document.getElementById('parto-fecha').value,
+                sexo_cria: document.getElementById('parto-sexo').value,
+                nombre_cria: document.getElementById('parto-nombre-cria').value.trim(),
+                observaciones: document.getElementById('parto-obs').value.trim(),
+                id_origen: 1, // Por defecto, nacido en hacienda
+                id_ubicacion: catalogonsGlobales?.ubicaciones?.[0]?.id_ubicacion || 1
+            };
+
+            const res = await fetch('/api/ganado/partos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(body)
+            });
+            if (res.ok) {
+                alert('¡Parto y cría creados con éxito!');
+                document.getElementById('form-parto').reset();
+                inicializarDashboard();
+            }
+        });
+
+        // GUARDAR PRODUCCIÓN
+        document.getElementById('form-produccion').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = {
+                id_animal: parseInt(document.getElementById('prod-vaca').value),
+                fecha: document.getElementById('prod-fecha').value,
+                cantidad: parseFloat(document.getElementById('prod-cantidad').value)
+            };
+
+            const res = await fetch('/api/ganado/produccion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(body)
+            });
+            if (res.ok) {
+                alert('¡Pesaje de leche ingresado con éxito!');
+                document.getElementById('form-produccion').reset();
+                inicializarDashboard();
+            }
+        });
+
+        // GUARDAR USUARIO
+        document.getElementById('form-crear-usuario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('new-username').value.trim();
+            const p = document.getElementById('new-password').value;
+            const r = parseInt(document.getElementById('new-role').value);
+
+            const res = await fetch('/api/usuarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ username: u, password: p, rolesIds: [r] })
+            });
+            if (res.ok) {
+                document.getElementById('form-crear-usuario').reset();
+                cargarUsuarios();
+            }
+        });
+
         document.getElementById('btn-logout').addEventListener('click', () => {
             localStorage.clear();
             window.location.href = 'index.html';
         });
+
+        window.onload = inicializarDashboard;
     </script>
 </body>
 </html>
