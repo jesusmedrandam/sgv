@@ -6,6 +6,15 @@ const pool = require('./db');
 const app = express();
 app.use(express.json());
 
+// CONFIGURACIÓN PARA SERVIR LA WEB DESDE RENDER
+// Sirve cualquier archivo HTML/JS en la raíz (como dashboard.html)
+app.use(express.static(__dirname));
+
+// Envía el login automáticamente al entrar a la URL principal
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // MIDDLEWARES DE SEGURIDAD
